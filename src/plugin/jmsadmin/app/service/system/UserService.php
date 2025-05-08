@@ -136,7 +136,7 @@ class UserService extends BasicService
 
     public function beforeInsert($params)
     {
-        if (!preg_match('/^\w{2,20}$/i', $params['username'])) {
+        if (!preg_match('/^\w{2,20}$/i', $params['user_name'])) {
             throw new ApiException("用户名只能包含字母数字和下划线");
         }
         if (!empty($params['role_ids'])) {
