@@ -202,9 +202,6 @@ class UserService extends BasicService
                 throw new ApiException('您无权操作该用户');
             }
         }
-        if (isset($params['password'])) {
-            unset($params['password']);
-        }
         return parent::beforeUpdate($params);
     }
 
