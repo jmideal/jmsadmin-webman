@@ -1,0 +1,11 @@
+/runtime
+/.idea
+/.vscode
+/vendor
+*.log
+.env
+/tests/tmp
+/tests/.phpunit.result.cache
+tool
+/src/plugin/jmsadmin/constant/GenConstants.php
+/src/plugin/jmsadmin/utils/Gen.php
