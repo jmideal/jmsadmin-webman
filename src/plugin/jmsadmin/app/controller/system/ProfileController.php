@@ -90,8 +90,19 @@ class ProfileController extends BasicController
             $uploadPath = config('plugin.jmsadmin.app.upload_path');
             $dir = '/' . date('Y') . '/' . date('m') . '/' . date('d') . '/';
             $fileName = Random::uuid() . '.' . $file->getUploadExtension();
-            $file->move($uploadPath . $dir . $fileName);
             $adminInfo = adminInfo();
+            //
+            $fileData = [
+                'extension'     => $file->getUploadExtension(),
+                'mime_type'     => $file->getUploadMimeType(),
+                'file_name'     => $file->getUploadName(),
+                'size'          => $file->getSize(),
+                'path'          => $dir . $fileName,
+                'create_by'     => $adminInfo['user_id']
+            ];
+            //
+
+            $file->move($uploadPath . $dir . $fileName);
             $userId = $adminInfo['user_id'];
             $userData = [
                 'user_id' => $userId,
@@ -100,12 +111,13 @@ class ProfileController extends BasicController
 
             $userService = new UserService();
             $userService->userUpdate($userData);
+
             return ApiResult::success(['imgUrl' => $dir . $fileName]);
         }
         return ApiResult::error("上传出现错误");
     }
 
-    #[LogInfo(name: "修改密码")]
+    #[LogInfo(name: "修改密码", withParams: false)]
     public function pwdEdit(Request $request): Response
     {
         $oldPassword = $request->post('oldPassword', '');

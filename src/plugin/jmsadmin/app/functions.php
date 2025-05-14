@@ -165,7 +165,7 @@ function getAnnotationPermission(ReflectionClass $reflection = null)
 function getAnnotationLogInfo(ReflectionClass $reflection = null)
 {
     $request = Request();
-    $logInfo = ['className' => '', 'functionName' => '', 'controller' => '', 'action' => ''];
+    $logInfo = ['className' => '', 'functionName' => '', 'controller' => '', 'action' => '', 'withResult' => true, 'withParams' => true];
     if (empty($reflection) && !empty($request->controller)) {
         $reflection = new ReflectionClass($request->controller);
     }
@@ -175,11 +175,15 @@ function getAnnotationLogInfo(ReflectionClass $reflection = null)
         $attributes = $reflection->getAttributes(LogInfo::class);
         if (!empty($attributes[0])) {
             $logInfo['className'] = $attributes[0]->newInstance()->name;
+            $logInfo['withResult'] = $attributes[0]->newInstance()->withResult;
+            $logInfo['withParams'] = $attributes[0]->newInstance()->withParams;
         }
         $reflectionMethod = $reflection->getMethod($request->action);
         $attributes = $reflectionMethod->getAttributes(LogInfo::class);
         if (!empty($attributes[0])) {
             $logInfo['functionName'] = $attributes[0]->newInstance()->name;
+            $logInfo['withResult'] = $attributes[0]->newInstance()->withResult;
+            $logInfo['withParams'] = $attributes[0]->newInstance()->withParams;
         }
     }
     return array_values($logInfo);

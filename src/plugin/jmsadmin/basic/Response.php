@@ -8,11 +8,11 @@ class Response extends WebmanResponse
     protected $businessStatus;
     protected $message;
 
-    function __construct($content, $status = 200, $headers = array(), $businessStatus = 200, $message = '')
+    function __construct($status = 200, $headers = array(), $content = null, $businessStatus = 200, $message = '')
     {
         $this->businessStatus = $businessStatus;
         $this->message = $message;
-        parent::__construct($content, $status, $headers);
+        parent::__construct($status, $headers, $content);
     }
 
     public function setBusinessStatus($status)

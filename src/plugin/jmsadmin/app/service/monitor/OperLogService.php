@@ -50,10 +50,7 @@ class OperLogService extends BasicService
         if (getControllerBaseName($reflection->getShortName()) == 'auth' && in_array($request->action, ['login', 'logout'])) {
             return true;
         }
-        if (getControllerBaseName($reflection->getShortName()) == 'profile' && in_array($request->action, ['pwdEdit'])) {
-            return true;
-        }
-        list($className, $functionName, $controller, $action) = getAnnotationLogInfo($reflection);
+        list($className, $functionName, $controller, $action, $withResult, $withParams) = getAnnotationLogInfo($reflection);
         if (empty($functionName)) {
             $reqInfo = resolveRequest();
             $menuService = new MenuService();
@@ -78,11 +75,15 @@ class OperLogService extends BasicService
         $data['user_id'] = $adminInfo['user_id'] ?? 0;
         $data['oper_url'] = $request->uri();
         $data['oper_ip'] = $request->getRealIp(true);
-        $data['oper_param'] = json_encode($request->all(), JSON_UNESCAPED_UNICODE);
-        if (is_array($result) || is_object($result)) {
-            $data['json_result'] = json_encode($result, JSON_UNESCAPED_UNICODE);
-        } else {
-            $data['json_result'] = $result;
+        if ($withParams) {
+            $data['oper_param'] = json_encode($request->all(), JSON_UNESCAPED_UNICODE);
+        }
+        if ($withResult) {
+            if (is_array($result) || is_object($result)) {
+                $data['json_result'] = json_encode($result, JSON_UNESCAPED_UNICODE);
+            } else {
+                $data['json_result'] = $result;
+            }
         }
         $data['status'] = $status;
         $data['error_msg'] = $message;

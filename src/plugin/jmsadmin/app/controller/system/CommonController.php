@@ -27,6 +27,19 @@ class CommonController extends BasicController
             $uploadPath = config('plugin.jmsadmin.app.upload_path');
             $dir = '/' . date('Y') . '/' . date('m') . '/' . date('d') . '/';
             $fileName = Random::uuid() . '.' . $file->getUploadExtension();
+
+            //
+            $adminInfo = adminInfo();
+            $fileData = [
+                'extension'     => $file->getUploadExtension(),
+                'mime_type'     => $file->getUploadMimeType(),
+                'file_name'     => $file->getUploadName(),
+                'size'          => $file->getSize(),
+                'path'          => $dir . $fileName,
+                'create_by'     => $adminInfo['user_id']
+            ];
+            //
+
             $file->move($uploadPath . $dir . $fileName);
             return ApiResult::success(['fileName' => $fileName, 'filePath' => $dir . $fileName, 'ext' => $file->getUploadExtension()]);
         }
